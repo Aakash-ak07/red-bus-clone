@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 import JourneyContext from "../context/JourneyContext";
 
 const Search = () => {
-  
+
   const [journeyDate, setJourneyDate] = useState("");
-  const navigate=useNavigate();
-  const {from,to,setFrom,setTo}=useContext(JourneyContext);
+  const navigate = useNavigate();
+  const { from, to, setFrom, setTo } = useContext(JourneyContext);
 
   function interchangeFromTo() {
     const startPoint = from;
@@ -18,14 +18,21 @@ const Search = () => {
     setTo(startPoint);
   }
 
-  function searchBuses(){
-    if(!from||!to||!journeyDate){
+  function searchBuses() {
+    if (!from || !to || !journeyDate) {
       toast.error("All fields are required")
     }
-    else{
+    else {
       navigate("/results")
     }
   }
+
+  const handleReset = () => {
+    setFrom('');
+    setTo('');
+    setJourneyDate('');
+  }
+
 
   return (
     <Container>
@@ -57,7 +64,10 @@ const Search = () => {
             }}
             aria-label="Text input with dropdown button"
           />
-          <Button variant="danger" onClick={searchBuses}>Search Buses</Button>
+          {/* <Button variant="danger"  onClick={searchBuses}>Search Buses</Button> */}
+          <Button variant="danger" onClick={searchBuses} disabled={from <= 1 || to <= 1}>Search Buses</Button>
+          <Button variant="danger" className="mx-3" onClick={handleReset}>Reset</Button>
+
         </InputGroup>
       </div>
     </Container>

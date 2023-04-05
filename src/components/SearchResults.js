@@ -8,7 +8,7 @@ const SearchResults = () => {
   const [buses, setBuses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { from, to } = useContext(JourneyContext);
- 
+  const navigate = useNavigate();
 
   async function fetchBuses() {
     setIsLoading(true);
@@ -22,27 +22,24 @@ const SearchResults = () => {
 
   useEffect(() => {
     fetchBuses();
-  }, [from,to]);
+  }, [from, to]);
 
-  function sortResults(criteria){
-    if(criteria==="Price"){
-        const busesCopy=[...buses]
-        const sortedBuses=busesCopy.sort((a,b)=>{
-            if(a.ticketPrice<b.ticketPrice){
-                return -1
-            }
-        
-                return 1
-            
-        })
-        setBuses(sortedBuses)
+  function sortResults(criteria) {
+    if (criteria === "Price") {
+      const busesCopy = [...buses]
+      const sortedBuses = busesCopy.sort((a, b) => {
+        if (a.ticketPrice < b.ticketPrice) {
+          return -1
+        }
+        return 1
+      })
+      setBuses(sortedBuses)
     }
   }
 
   if (isLoading) {
     return <Spinner animation="border" variant="danger" />;
   }
-  
 
   return (
     <div className="bg-danger p-2 d-flex flex-column">
@@ -51,7 +48,7 @@ const SearchResults = () => {
         <div className="d-flex justify-content-around w-100">
           {["Departure", "Arrival", "Price"].map((criteria) => {
             return (
-              <Button variant="danger" className="rounded-0" onClick={()=>{
+              <Button variant="danger" className="rounded-0" onClick={() => {
                 sortResults(criteria)
               }}>
                 {criteria}
@@ -60,8 +57,11 @@ const SearchResults = () => {
           })}
         </div>
       </div>
+
+      {buses.length === 0 && <h1>Sorry, no buses available</h1>}
+
       {buses.map((bus) => {
-        return <BusResult bus={bus} />;
+        return bus ? <BusResult bus={bus} /> : null;
       })}
     </div>
   );
